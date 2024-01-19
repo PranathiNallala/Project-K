@@ -28,13 +28,42 @@ class Ocr:
 
         total_amt = total_amt.splitlines()[0]
         total_amt = float(total_amt)
-        print(total_amt)
 
         expense_objs = []
 
         for expense in expenses:
             if expense.find("SUBTOTAL") != -1:
                 break
-            expense_objs.append(expense)
+            obj = Expense()
+            obj(expense)
+            expense_objs.append(obj)
         
         return expense_objs
+    
+class Expense():
+
+    def __init__(self):
+        self.title = None
+        self.amt = None
+        self.paid_by = None
+        self.split_to = None
+    
+    def split(self, paid_by, split_to):
+        self.paid_by = int(paid_by)
+        self.split_to = [int(x) for x in split_to.split(",")]
+    
+    def __call__(self, row):
+        row_entities = row.strip(r'^[A-Z][^?!.]*[?.!]$').rsplit()[:-1]
+        self.title = " ".join(row_entities[:-1])
+
+        try:
+            self.amt = float(row_entities[-1])
+            # check = input(f"Title - {self.title}\nAmount - {self.amt}\nIs this correct? Y - yes, N - no.")
+            # if check == 'N':
+                # self.amt = float(input("Enter the value"))
+        except ValueError:
+            # self.amt = float(input(f"Value not detected, enter the value - \n{self.row}"))
+            self.amt = 0
+        
+        # print(self.title)
+        # print(self.amt)

@@ -17,13 +17,11 @@ model_connector_obj = ModelConnector()
 
 @router.post("/get_expenses", tags=["split"])
 def get_expenses(image: UploadFile = File(...)):
-    result = {}
-    result["expenses"] = []
-    result["error"] = ""
+    result = {"expenses": [], "error": ""}
     try:
         content = image.file.read()
         image_path = "temp_image.png"
-    
+
         # Write the content of the image to a file
         with open(image_path, "wb") as img_file:
             img_file.write(content)

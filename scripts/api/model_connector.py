@@ -26,7 +26,7 @@ class ModelConnector:
             text = ocr_obj.text_extraction(image_path)
             expenses = ocr_obj.expenses_detection_walmart(text)
 
-            res = [{"expense_id": i, "text": expense} for i, expense in enumerate(expenses)]
+            res = [{"expense_id": i, "text": expense.title, "amount": expense.amt} for i, expense in enumerate(expenses)]
         except Exception as e:
             logger.error(str(e))
         return res
