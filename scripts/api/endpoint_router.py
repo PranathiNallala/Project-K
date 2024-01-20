@@ -31,3 +31,13 @@ def get_expenses(image: UploadFile = File(...)):
         logger.error(str(e))
         result["error"] = str(e)
     return result
+
+@router.post("/split", tags=["split"])
+def split(data: dict):
+    result = {"split_result": "", "error": ""}
+    try:
+        result["split_result"] = model_connector_obj.split(data)
+    except Exception as e:
+        logger.error(str(e))
+        result["error"] = str(e)
+    return result

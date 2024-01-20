@@ -30,3 +30,12 @@ class ModelConnector:
         except Exception as e:
             logger.error(str(e))
         return res
+    
+    def split(self, data):
+        res = {}
+        try:
+            ocr_obj = Ocr()
+            res = ocr_obj.split_from_web_data(data)
+        except Exception as e:
+            logger.error(str(e))
+        return res

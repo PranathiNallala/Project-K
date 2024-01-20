@@ -1,6 +1,9 @@
 import cv2
 import re
 import pytesseract
+from typing import Optional, List
+
+from scripts.log import logger
 
 pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract'
 
@@ -40,13 +43,50 @@ class Ocr:
         
         return expense_objs
     
+    def split_from_web_data(self, data):
+        user_id = {user: i for i, user in enumerate(data["participants"])}
+        expenses = [Expense(bill["text"], bill["amount"], 0, [user_id[i] for i in bill["splitTo"]]) for bill in data["bills"]]
+        
+        amt_paid, amt_share, balance_amt = self.final_split(expenses, list(user_id.keys()))
+
+        res = []
+        for user in data["participants"]:
+            tmp = {user: {"amount_paid": amt_paid[user], 
+                    "amount_share": amt_share[user], 
+                    "balance_amount": balance_amt[user]}}
+            res.append(tmp)
+        
+        return res
+    
+    def final_split(self, expenses, user_ids):
+        res = {}
+        amounts_paid = {}
+        amounts_taken = {}
+        try:
+            id_users = {i: user for i, user in enumerate(user_ids)}
+            for i in user_ids:
+                amounts_paid[i] = 0
+                amounts_taken[i] = 0
+            for expense in expenses:
+                amounts_paid[id_users[expense.paid_by]] += expense.amt
+                for i in expense.split_to:
+                    amounts_taken[id_users[i]] += expense.amt / len(expense.split_to)
+            
+            for i in user_ids:
+                res[i] = amounts_paid[i] - amounts_taken[i]
+        except Exception as e:
+            logger.error(str(e))
+        
+        return amounts_paid, amounts_taken, res
+        
+
 class Expense():
 
-    def __init__(self):
-        self.title = None
-        self.amt = None
-        self.paid_by = None
-        self.split_to = None
+    def __init__(self, title: Optional[str] = None, amt: Optional[float] = None, paid_by: Optional[int] = None, split_to: Optional[List[int]] = None):
+        self.title = title
+        self.amt = float(amt) if amt is not None else None
+        self.paid_by = int(paid_by) if paid_by is not None else None
+        self.split_to = [int(x) for x in split_to] if split_to is not None else None
     
     def split(self, paid_by, split_to):
         self.paid_by = int(paid_by)
@@ -58,12 +98,6 @@ class Expense():
 
         try:
             self.amt = float(row_entities[-1])
-            # check = input(f"Title - {self.title}\nAmount - {self.amt}\nIs this correct? Y - yes, N - no.")
-            # if check == 'N':
-                # self.amt = float(input("Enter the value"))
         except ValueError:
-            # self.amt = float(input(f"Value not detected, enter the value - \n{self.row}"))
             self.amt = 0
         
-        # print(self.title)
-        # print(self.amt)
