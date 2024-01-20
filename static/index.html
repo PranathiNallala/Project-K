@@ -11,6 +11,18 @@
         input {
             width: 100%;
         }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -22,8 +34,30 @@
         <button type="button" onclick="uploadImage()">Upload Image</button>
     </form>
 
+    <h2>Participants</h2>
+    <form id="participantsForm">
+        <label for="participantName">Name:</label>
+        <input type="text" id="participantName" name="participantName" required>
+        <button type="button" onclick="addParticipant()">Add</button>
+    </form>
+
+    <h2>Participants Table</h2>
+    <table id="participantsTable">
+        <tr>
+            <th>Name</th>
+        </tr>
+    </table>
+
+    <h2>Bills</h2>
     <div id="responseContainer">
         <!-- Response will be displayed here -->
+    </div>
+    
+    <button type="button" onclick="splitBill()">Split</button>
+
+    <h2>Split Result</h2>
+    <div id="splitResultContainer">
+        <!-- Split result will be displayed here -->
     </div>
 
     <script>
@@ -46,13 +80,21 @@
                 // Check if there are no errors
                 if (data.error === "") {
                     // Display expenses in a table
-                    var tableHtml = "<table border='1'><tr><th>ID</th><th>Text</th><th>Amount</th></tr>";
+                    var tableHtml = "<table id='billsTable'><tr><th>ID</th><th>Text</th><th>Amount</th><th>Split To</th></tr>";
 
                     data.expenses.forEach(expense => {
                         tableHtml += "<tr>";
                         tableHtml += "<td>" + expense.expense_id + "</td>";
                         tableHtml += "<td><input type='text' value='" + expense.text + "'></td>";
                         tableHtml += "<td><input type='text' value='" + expense.amount + "'></td>";
+
+                        // Display participants from the Participants Table with checkboxes
+                        var participantsTable = document.getElementById("participantsTable");
+                        participantsTable.querySelectorAll("td:first-child").forEach(cell => {
+                            var participantName = cell.textContent;
+                            tableHtml += "<td><label><input type='checkbox' value='" + participantName + "'>" + participantName + "</label></td>";
+                        });
+
                         tableHtml += "</tr>";
                     });
 
@@ -62,6 +104,104 @@
                     // Display errors
                     document.getElementById("responseContainer").innerHTML = "<p>Error: " + data.error + "</p>";
                 }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                // Handle errors if needed
+            });
+        }
+    
+        function addParticipant() {
+            var participantName = document.getElementById("participantName").value.trim();
+
+            if (participantName !== "") {
+                // Add name to the participants table
+                var table = document.getElementById("participantsTable");
+                var row = table.insertRow(-1);
+                var cellName = row.insertCell(0);
+
+                cellName.innerHTML = participantName;
+
+                // Clear the input field
+                document.getElementById("participantName").value = "";
+            }
+        }
+
+        function splitBill() {
+            // Extract data from the Bills table
+            var billsTable = document.getElementById("billsTable");
+            var billsData = [];
+            var participantsList = [];
+
+            // Get participants names
+            var participantsTable = document.getElementById("participantsTable");
+            var participantNames = Array.from(participantsTable.querySelectorAll("td:first-child")).map(cell => cell.textContent);
+            participantsList = participantNames;
+
+            // Get bills data
+            for (var i = 1; i < billsTable.rows.length; i++) {
+                var row = billsTable.rows[i];
+                var rowData = {
+                    id: row.cells[0].textContent,
+                    text: row.cells[1].querySelector("input").value,
+                    amount: row.cells[2].querySelector("input").value,
+                    splitTo: []
+                };
+
+                // Get selected participants in the Split To column
+                var checkboxes = row.cells[3].querySelectorAll("input[type='checkbox']:checked");
+                checkboxes.forEach(checkbox => {
+                    rowData.splitTo.push(checkbox.value);
+                });
+
+                billsData.push(rowData);
+            }
+
+            // Combine participants list and bills data
+            var requestData = {
+                participants: participantsList,
+                bills: billsData
+            };
+
+            // Log the data before sending the request
+            console.log("Request Payload:", JSON.stringify(requestData));
+
+            // Send data to another endpoint for splitting
+            fetch("http://0.0.0.0:8000/projectk/split", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Handle the result as needed
+                console.log("Result from split endpoint:", result);
+                
+                // Display the split result in a table
+                var resultTableHtml = "<table><tr><th>User</th><th>Amount Paid</th><th>Amount Share</th><th>Balance Amount</th></tr>";
+
+                result.split_result.forEach(userResult => {
+                    var user = Object.keys(userResult)[0];
+                    var userDetails = userResult[user];
+
+                    resultTableHtml += "<tr>";
+                    resultTableHtml += "<td>" + user + "</td>";
+                    resultTableHtml += "<td>" + userDetails.amount_paid + "</td>";
+                    resultTableHtml += "<td>" + userDetails.amount_share + "</td>";
+                    resultTableHtml += "<td>" + userDetails.balance_amount + "</td>";
+                    resultTableHtml += "</tr>";
+                });
+
+                resultTableHtml += "</table>";
+                document.getElementById("splitResultContainer").innerHTML = resultTableHtml;
+
             })
             .catch(error => {
                 console.error("Error:", error);
