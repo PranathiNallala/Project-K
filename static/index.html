@@ -162,7 +162,7 @@
                 };
 
                 // Get selected participants in the Split To column
-                var checkboxes = row.cells[3].querySelectorAll("input[type='checkbox']:checked");
+                var checkboxes = row.querySelectorAll("td:nth-child(n+4) input[type='checkbox']:checked");
                 checkboxes.forEach(checkbox => {
                     rowData.splitTo.push(checkbox.value);
                 });
