@@ -11,6 +11,10 @@
         input {
             width: 100%;
         }
+        input#participantName {
+            width: 100%;
+            max-width: 200px;
+        }
         table {
             border-collapse: collapse;
             width: 100%;
@@ -24,30 +28,32 @@
             background-color: #f2f2f2;
         }
     </style>
+    <!-- Link the external CSS file -->
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     <h1>Project-K</h1>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <label for="image">Choose an image:</label>
-        <input type="file" id="image" name="image" accept="image/*" required>
-        <br>
-        <button type="button" onclick="uploadImage()">Upload Image</button>
-    </form>
+            <form id="uploadForm" enctype="multipart/form-data">
+            <label for="image">Choose an image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <br>
+            <button type="button" onclick="uploadImage()">Upload Image</button>
+        </form>
 
-    <h2>Participants</h2>
-    <form id="participantsForm">
-        <label for="participantName">Name:</label>
-        <input type="text" id="participantName" name="participantName" required>
-        <button type="button" onclick="addParticipant()">Add</button>
-    </form>
-
-    <h2>Participants Table</h2>
-    <table id="participantsTable">
-        <tr>
-            <th>Name</th>
-        </tr>
-    </table>
-
+        <h2>Participants</h2>
+        <form id="participantsForm">
+            <label for="participantName">Name:</label>
+            <input type="text" id="participantName" name="participantName" required>
+            <button type="button" onclick="addParticipant()">Add</button>
+        </form>
+    
+            <h2>Participants Table</h2>
+        <table id="participantsTable">
+            <tr>
+                <th>Name</th>
+            </tr>
+        </table>
+    
     <h2>Bills</h2>
     <div id="responseContainer">
         <!-- Response will be displayed here -->
@@ -80,7 +86,14 @@
                 // Check if there are no errors
                 if (data.error === "") {
                     // Display expenses in a table
-                    var tableHtml = "<table id='billsTable'><tr><th>ID</th><th>Text</th><th>Amount</th><th>Split To</th></tr>";
+                    var participantsList = [];
+
+                    // Get participants names
+                    var participantsTable = document.getElementById("participantsTable");
+                    var participantNames = Array.from(participantsTable.querySelectorAll("td:first-child")).map(cell => cell.textContent);
+                    participantsList = participantNames;
+
+                    var tableHtml = "<table id='billsTable'><tr><th>ID</th><th>Text</th><th>Amount</th><th colspan='" + participantsList.length + "'>Split To</th></tr>";
 
                     data.expenses.forEach(expense => {
                         tableHtml += "<tr>";

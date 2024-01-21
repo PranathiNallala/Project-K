@@ -1,0 +1,81 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+#participantsTable, #billsTable, #splitResultTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#participantsTable th, #participantsTable td,
+#billsTable th, #billsTable td,
+#splitResultTable th, #splitResultTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#participantsTable th, #billsTable th, #splitResultTable th {
+    background-color: #f2f2f2;
+}
+
+input[type='file'] {
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#splitResultContainer {
+    margin-top: 20px;
+}
+
+/* Custom styles for checkboxes */
+input[type='checkbox'] {
+    margin-right: 5px;
+}
+
+/* Custom style for Split To column */
+#billsTable th:nth-child(4), #billsTable td:nth-child(4) {
+    text-align: center;
+}
+
+/* Custom style for Split button */
+#splitButton {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#splitButton:hover {
+    background-color: #0056b3;
+}
