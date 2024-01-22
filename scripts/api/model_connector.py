@@ -1,10 +1,4 @@
-import os
 from pathlib import Path
-import csv
-import json
-import time
-import requests
-import pandas as pd
 
 from scripts.log import logger
 from scripts.model.ocr import Ocr
@@ -26,7 +20,16 @@ class ModelConnector:
             text = ocr_obj.text_extraction(image_path)
             expenses = ocr_obj.expenses_detection_walmart(text)
 
-            res = [{"expense_id": i, "text": expense} for i, expense in enumerate(expenses)]
+            res = [{"expense_id": i, "text": expense.title, "amount": expense.amt} for i, expense in enumerate(expenses)]
+        except Exception as e:
+            logger.error(str(e))
+        return res
+    
+    def split(self, data):
+        res = {}
+        try:
+            ocr_obj = Ocr()
+            res = ocr_obj.split_from_web_data(data)
         except Exception as e:
             logger.error(str(e))
         return res
