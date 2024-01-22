@@ -7,6 +7,7 @@ h1 {
     text-align: center;
 }
 
+/* Form styles */
 form {
     margin-bottom: 20px;
 }
@@ -15,27 +16,33 @@ label {
     margin-right: 10px;
 }
 
-#participantsTable, #billsTable, #splitResultTable {
+input[type='file'] {
+    margin-bottom: 10px;
+}
+
+/* Table styles */
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
     border-collapse: collapse;
     width: 100%;
 }
 
-#participantsTable th, #participantsTable td,
-#billsTable th, #billsTable td,
-#splitResultTable th, #splitResultTable td {
+th, td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
 }
 
-#participantsTable th, #billsTable th, #splitResultTable th {
+th {
     background-color: #f2f2f2;
 }
 
-input[type='file'] {
-    margin-bottom: 10px;
-}
-
+/* Button styles */
 button {
     padding: 10px;
     background-color: #4CAF50;
@@ -49,7 +56,24 @@ button:hover {
     background-color: #45a049;
 }
 
-#splitResultContainer {
+/* Split button styles */
+#splitButton {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+#splitButton {
+    background-color: #007BFF;
+}
+
+#splitButton:hover {
+    background-color: #0056b3;
+}
+
+/* Split Result Container styles */
+#splitResultContainer, #expensesContainer {
     margin-top: 20px;
 }
 
@@ -59,23 +83,6 @@ input[type='checkbox'] {
 }
 
 /* Custom style for Split To column */
-#billsTable th:nth-child(4), #billsTable td:nth-child(4) {
+.split-to-column {
     text-align: center;
-}
-
-/* Custom style for Split button */
-#splitButton {
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 40px;
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#splitButton:hover {
-    background-color: #0056b3;
 }
