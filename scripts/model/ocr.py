@@ -5,7 +5,7 @@ from typing import Optional, List
 
 from scripts.log import logger
 
-pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract'
+# pytesseract.pytesseract.tesseract_cmd = r'/opt/homebrew/bin/tesseract'
 
 class Ocr:
 

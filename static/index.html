@@ -69,8 +69,9 @@
     <script>
         function uploadImage() {
             var formData = new FormData(document.getElementById("uploadForm"));
+            console.log("image data: ", formData)
 
-            fetch("http://0.0.0.0:8000/projectk/get_expenses", {
+            fetch("https://project-k-o4xlivwhaq-uc.a.run.app/projectk/get_expenses", {
                 method: "POST",
                 body: formData
             })
@@ -180,7 +181,7 @@
             console.log("Request Payload:", JSON.stringify(requestData));
 
             // Send data to another endpoint for splitting
-            fetch("http://0.0.0.0:8000/projectk/split", {
+            fetch("https://project-k-o4xlivwhaq-uc.a.run.app/projectk/split", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
