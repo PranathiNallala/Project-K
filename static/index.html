@@ -34,35 +34,39 @@
 <body>
     <h1>Project-K</h1>
 
-    <h2>Participants</h2>
-    <form id="participantsForm">
-        <label for="participantName">Name:</label>
-        <input type="text" id="participantName" name="participantName" required onkeydown="handleEnterKey(event)">
-        <button type="button" onclick="addParticipant()">Add</button>
-    </form>
-    
-    <h2>Participants Table</h2>
-    <div class="table-container">
-        <table id="participantsTable">
-            <tr>
-                <th>Name</th>
-            </tr>
-        </table>
+    <div class="container-left">
+        <h2>Participants</h2>
+        <form id="participantsForm">
+            <label for="participantName">Name:</label>
+            <input type="text" id="participantName" name="participantName" required onkeydown="handleEnterKey(event)">
+            <button type="button" onclick="addParticipant()">Add</button>
+        </form>
+        
+        <h2>Participants Table</h2>
+        <div class="table-container">
+            <table id="participantsTable">
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </table>
+        </div>
     </div>
 
-    <h2>Paid By</h2>
-    <form id="paidByForm">
-        <label for="paidBy">Select who paid for the bill:</label>
-        <select id="paidBy" name="paidBy" required></select>
-    </form>
+    <div class="container-right">
+        <h2>Paid By</h2>
+        <form id="paidByForm">
+            <label for="paidBy">Select who paid for the bill:</label>
+            <select id="paidBy" name="paidBy" required></select>
+        </form>
 
-    <h2>Bill Upload</h2>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <label for="image">Choose an image:</label>
-        <input type="file" id="image" name="image" accept="image/*" required>
-        <br>
-        <button type="button" onclick="uploadImage()">Upload Image</button>
-    </form>
+        <h2>Bill Upload</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="image">Choose an image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <br>
+            <button type="button" onclick="uploadImage()">Upload Image</button>
+        </form>
+    </div>
     
     <h2 id="expensesHeading" style="display:none;">Expenses</h2>
     <div id="expensesContainer">
