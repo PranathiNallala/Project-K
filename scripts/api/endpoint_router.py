@@ -1,8 +1,5 @@
-import os
-import pandas as pd
 
-from fastapi import APIRouter, File, UploadFile, Request
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, File, UploadFile
 
 from scripts.log import logger
 from scripts.api.model_connector import ModelConnector

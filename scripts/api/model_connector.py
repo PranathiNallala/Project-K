@@ -1,10 +1,4 @@
-import os
 from pathlib import Path
-import csv
-import json
-import time
-import requests
-import pandas as pd
 
 from scripts.log import logger
 from scripts.model.ocr import Ocr
