@@ -79,3 +79,16 @@ input[type='checkbox'] {
 #splitButton:hover {
     background-color: #0056b3;
 }
+.container-left {
+    width: 50%; /* Adjust the width of each container as needed */
+    margin: 0; /* Remove any default margin */
+    padding: 10px; /* Adjust the padding as needed */
+    box-sizing: border-box; /* Include padding in the width calculation */
+}
+    
+.container-right {
+    width: 50%; 
+    margin: 0; 
+    padding: 10px; 
+    box-sizing: border-box; 
+}
